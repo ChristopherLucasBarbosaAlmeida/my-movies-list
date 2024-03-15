@@ -1,0 +1,13 @@
+@import "../../styles/colors";
+
+.input {
+  padding: 8px;
+  background-color: transparent;
+  border-radius: 8px;
+  border: 1px solid $neutral600;
+  color: $neutral400;
+
+  &::placeholder {
+    color: $neutral400;
+  }
+}

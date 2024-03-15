@@ -1,0 +1,25 @@
+@import "../../styles/colors";
+
+.button {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button__primary {
+  background-color: $indigo50;
+  color: $neutral950;
+}
+
+.button__secondary {
+  background-color: $neutral600;
+  color: $indigo50;
+}
+
+.button__purple {
+  background-color: $indigo600;
+  color: $indigo50;
+}

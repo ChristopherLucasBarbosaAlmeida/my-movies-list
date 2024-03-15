@@ -1,0 +1,23 @@
+@import "../../styles/colors";
+
+.banner {
+  display: flex;
+  flex-direction: column;
+
+  img {
+    background-color: $neutral600;
+    height: 250px;
+    width: 175px;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+
+  strong {
+    color: $indigo50;
+    margin-bottom: 4px;
+  }
+
+  span {
+    color: $neutral600;
+  }
+}
