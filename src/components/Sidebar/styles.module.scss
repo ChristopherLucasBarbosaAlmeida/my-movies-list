@@ -1,0 +1,61 @@
+@import "../../styles/colors";
+
+.sidebar {
+  width: 16%;
+  background-color: $neutral950;
+  height: 100%;
+  padding-inline: 16px;
+  padding-block: 32px;
+
+  h1 {
+    margin-bottom: 16px;
+    color: $indigo50;
+  }
+
+  input {
+    width: 100%;
+  }
+  
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid $neutral600;
+
+    ul li  {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      color: $indigo50;
+
+      a {
+        width: 100%;
+        color: $indigo50;
+      }
+    }
+  }
+
+  section {
+    padding: 8px;
+    margin-bottom: 16px;
+
+    h1 {
+      color: $neutral400;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+  }
+
+  button {
+    width: 100%;
+  }
+}

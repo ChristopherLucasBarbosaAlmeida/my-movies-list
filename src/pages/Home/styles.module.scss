@@ -2,22 +2,36 @@
 
 .container__home {
   flex: 1;
-  padding-inline: 64px;
-  padding-block: 32px;
+  padding-inline: 56px;
+  padding-block: 20px;
   overflow: auto;
 
   header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 24px;
 
     h1 {
       color: $neutral600;
       font-size: 16px;
     }
+
+    > div {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      > div {
+        width: 200px;
+      }
+    }
   }
 
   ul {
     display: flex;
-    gap: 16px;
     flex-wrap: wrap;
+    height: 795px;
+    gap: 20px;
   }
 }

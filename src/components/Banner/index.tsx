@@ -1,22 +1,21 @@
 import styles from "./styles.module.scss";
 
 type BannerProps = {
-  bannerUrl: string;
-  name: string;
-  genre: string;
+  title: string;
+  posterPath: string;
 };
 
+const baseUrl = "https://image.tmdb.org/t/p/original/";
+
 export function Banner(props: BannerProps) {
-  const { bannerUrl, genre, name } = props;
+  const { title, posterPath } = props;
 
   return (
     <li className={styles.banner}>
       <img
-        src={bannerUrl}
-        alt={name}
+        src={`${baseUrl}${posterPath}`}
+        alt={title}
       />
-      <strong>{name}</strong>
-      <span>{genre}</span>
     </li>
   );
 }
