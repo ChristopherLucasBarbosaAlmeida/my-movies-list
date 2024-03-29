@@ -1,0 +1,45 @@
+@import "../../styles/colors";
+
+.review {
+  width: 350px;
+  height: 175px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 4px;
+  border: 1px solid $neutral400;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      strong {
+        color: $indigo50;
+      }
+
+      span {
+        color: $neutral400;
+      }
+    }
+  }
+
+  p {
+    color: $indigo50;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: wrap;
+  }
+}

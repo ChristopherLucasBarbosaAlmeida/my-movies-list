@@ -4,6 +4,7 @@ import { Layout } from "../../layout";
 import { useState } from "react";
 import { useGenres } from "../../hooks/useGenres";
 import { useMovie } from "../../hooks/useMovie";
+import { Link } from "react-router-dom";
 
 const order = [
   {
@@ -51,11 +52,13 @@ export function Home() {
         </header>
         <ul>
           {response?.results.map((result) => (
-            <Banner
-              key={result.id}
-              posterPath={result.poster_path}
-              title={result.title}
-            />
+            <Link to={`movie/${result.id}`}>
+              <Banner
+                key={result.id}
+                posterPath={result.poster_path}
+                title={result.title}
+              />
+            </Link>
           ))}
         </ul>
       </div>

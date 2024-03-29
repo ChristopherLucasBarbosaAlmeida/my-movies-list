@@ -1,0 +1,9 @@
+@import "../../styles/colors";
+
+.chip {
+  border: 1px solid $neutral400;
+  border-radius: 4px;
+  width: max-content;
+  padding: 4px;
+  color: $neutral400;
+}
