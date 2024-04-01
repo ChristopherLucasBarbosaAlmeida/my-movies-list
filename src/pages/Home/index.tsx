@@ -3,7 +3,7 @@ import styles from "./styles.module.scss";
 import { Layout } from "../../layout";
 import { useState } from "react";
 import { useGenres } from "../../hooks/useGenres";
-import { useMovie } from "../../hooks/useMovie";
+import { useMovies } from "../../hooks/useMovies";
 import { Link } from "react-router-dom";
 
 const order = [
@@ -28,7 +28,7 @@ export function Home() {
   const genres = useGenres();
   const options = genres.map((genre) => ({ label: genre.name, value: genre.id }));
 
-  const { response } = useMovie(genre, popularity);
+  const { response } = useMovies(genre, popularity);
 
   return (
     <Layout>

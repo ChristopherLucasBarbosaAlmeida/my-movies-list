@@ -1,21 +1,25 @@
 import { useEffect, useState } from "react";
-import { MoviesResponse } from "../types/MovieResponse";
 import { axiosInstance } from "../libs/axios";
+import { Movie } from "../types/Movie";
+import { ReviewsResponse } from "../types/ReviewsResponse";
 
-export function useMovie(genre: string, popularity: string) {
-  const [response, setResponse] = useState<MoviesResponse>();
+export function useMovie(movieId?: string) {
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [reviewsResponse, setReviewsResponse] = useState<ReviewsResponse | null>(null);
 
   useEffect(() => {
     (async () => {
-      const response = await axiosInstance.get("discover/movie", {
-        params: {
-          with_genres: genre,
-          sort_by: popularity,
-        },
-      });
-      setResponse(response.data);
+      const response = await axiosInstance.get(`movie/${movieId}`);
+      setMovie(response.data);
     })();
-  }, [genre, popularity]);
+  }, [movieId]);
 
-  return { response };
+  useEffect(() => {
+    (async () => {
+      const response = await axiosInstance.get(`movie/${movieId}/reviews`);
+      setReviewsResponse(response.data);
+    })();
+  }, [movieId]);
+
+  return { movie, reviewsResponse };
 }

@@ -1,51 +1,13 @@
 import { Layout } from "../../layout";
-import { useParams } from "react-router-dom";
 import styles from "./styles.module.scss";
-import { useEffect, useState } from "react";
-import { Movie } from "../../types/Movie";
-import { axiosInstance } from "../../libs/axios";
 import { Chip, Review } from "../../components";
-
-type ReviewsResponse = {
-  id: number;
-  page: number;
-  results: {
-    author: string;
-    author_details: {
-      name: string;
-      username: string;
-      avatar_path: string;
-      rating: number;
-    };
-    content: string;
-    created_at: string;
-    id: string;
-    updated_at: string;
-    url: string;
-  }[];
-  total_page: number;
-  total_results: number;
-};
+import { useMovie } from "../../hooks/useMovie";
+import { useParams } from "react-router-dom";
 
 export function MovieInfo() {
-  const [movie, setMovie] = useState<Movie | null>(null);
-  const [reviewsResponse, setReviewsResponse] = useState<ReviewsResponse | null>(null);
-
   const { movieId } = useParams();
 
-  useEffect(() => {
-    (async () => {
-      const response = await axiosInstance.get(`movie/${movieId}`);
-      setMovie(response.data);
-    })();
-  }, [movieId]);
-
-  useEffect(() => {
-    (async () => {
-      const response = await axiosInstance.get(`movie/${movieId}/reviews`);
-      setReviewsResponse(response.data);
-    })();
-  }, [movieId]);
+  const { movie, reviewsResponse } = useMovie(movieId);
 
   return (
     <Layout>

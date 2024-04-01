@@ -23,7 +23,7 @@ export function Review(props: ReviewProps) {
           alt={author_details.name}
         />
         <div>
-          <strong>{author_details.name}</strong>
+          <strong>{author_details.username}</strong>
           <span>{formatDate(created_at)}</span>
         </div>
       </div>
