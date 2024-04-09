@@ -52,9 +52,11 @@ export function Home() {
         </header>
         <ul>
           {response?.results.map((result) => (
-            <Link to={`movie/${result.id}`}>
+            <Link
+              to={`movie/${result.id}`}
+              key={result.id}
+            >
               <Banner
-                key={result.id}
                 posterPath={result.poster_path}
                 title={result.title}
               />

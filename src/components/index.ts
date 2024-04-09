@@ -6,3 +6,4 @@ export * from "./Select";
 export * from "./Sidebar";
 export * from "./Chip";
 export * from "./Review";
+export * from "./Avatar";

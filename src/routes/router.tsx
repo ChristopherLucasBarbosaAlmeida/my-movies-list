@@ -1,16 +1,29 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, MovieInfo } from "../pages";
+import { Home, Login, MovieInfo } from "../pages";
+import { PrivateRoute } from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
     index: true,
-    element: <Home />,
+    element: (
+      <PrivateRoute>
+        <Home />,
+      </PrivateRoute>
+    ),
   },
   {
     path: "/movie/:movieId",
-    element: <MovieInfo />,
+    element: (
+      <PrivateRoute>
+        <MovieInfo />,
+      </PrivateRoute>
+    ),
     loader: ({ params }) => {
       return params;
     },
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
 ]);

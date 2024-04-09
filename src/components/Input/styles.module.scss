@@ -1,13 +1,32 @@
 @import "../../styles/colors";
 
 .input {
-  padding: 8px;
-  background-color: transparent;
-  border-radius: 8px;
-  border: 1px solid $neutral600;
-  color: $neutral400;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 
-  &::placeholder {
+  label {
     color: $neutral400;
+  }
+
+  input {
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    border: 1px solid $neutral400;
+    color: $indigo50;
+    outline: none;
+  }
+}
+
+.input__error {
+  label,
+  span {
+    color: $rose600;
+  }
+
+  input {
+    border: 1px solid $rose600;
   }
 }

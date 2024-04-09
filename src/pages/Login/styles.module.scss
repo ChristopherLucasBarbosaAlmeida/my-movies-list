@@ -1,0 +1,20 @@
+@import "../../styles/colors";
+
+.container__login {
+  background-color: $neutral900;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  form {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    h1 {
+      color: $indigo50;
+    }
+  }
+}

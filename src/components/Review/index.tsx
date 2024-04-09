@@ -1,4 +1,5 @@
 import { formatDate } from "../../utils/formatDate";
+import Avatar from "../Avatar";
 import styles from "./styles.module.scss";
 
 type ReviewProps = {
@@ -18,9 +19,9 @@ export function Review(props: ReviewProps) {
   return (
     <li className={styles.review}>
       <div>
-        <img
-          src={`https://image.tmdb.org/t/p/original/${author_details.avatar_path}`}
-          alt={author_details.name}
+        <Avatar
+          username={author_details.username}
+          avatar={author_details.avatar_path}
         />
         <div>
           <strong>{author_details.username}</strong>

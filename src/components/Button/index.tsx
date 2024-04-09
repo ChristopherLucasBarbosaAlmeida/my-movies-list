@@ -1,7 +1,11 @@
-import { ButtonHTMLAttributes, ReactNode } from "react";
+import { ButtonHTMLAttributes, ElementType } from "react";
 import styles from "./styles.module.scss";
 
-type ButtonProps = { children: ReactNode; variant: keyof typeof variants } & ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = {
+  variant: keyof typeof variants;
+  leftIcon?: ElementType;
+  rightIcon?: ElementType;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const variants = {
   primary: styles.button__primary,
@@ -10,14 +14,16 @@ const variants = {
 };
 
 export function Button(props: ButtonProps) {
-  const { children, variant } = props;
+  const { children, variant, leftIcon: LeftIcon, rightIcon: RightIcon, ...rest } = props;
 
   return (
     <button
       className={`${styles.button} ${variants[variant]}`}
-      {...props}
+      {...rest}
     >
+      {LeftIcon && <LeftIcon />}
       {children}
+      {RightIcon && <RightIcon />}
     </button>
   );
 }
