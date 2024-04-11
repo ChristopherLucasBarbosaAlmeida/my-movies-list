@@ -13,7 +13,7 @@ export default function Avatar(props: AvatarProps) {
   return (
     <div className={styles.avatar}>
       {!avatar ? (
-        <span>{username.charAt(0)}</span>
+        <span>{username?.charAt(0).toUpperCase()}</span>
       ) : (
         <img
           src={`${baseUrl}${avatar}`}

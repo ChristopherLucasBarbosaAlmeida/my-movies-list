@@ -67,6 +67,10 @@ export function Sidebar() {
         </Button>
       </section>
       <div>
+        <Avatar
+          avatar={user?.avatar?.tmdb?.avatar_path}
+          username={user.username}
+        />
         <span>{user.username}</span>
       </div>
       <Button

@@ -1,12 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import { Button, Input } from "../../components";
+import { useContext, useState } from "react";
+import { Button, Input, Alert } from "../../components";
 import styles from "./styles.module.scss";
 import { axiosInstance } from "../../libs/axios";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { SessionContext } from "../../context/SessionContext";
 import { useNavigate } from "react-router-dom";
 import { CiLogin } from "react-icons/ci";
 import { useForm } from "react-hook-form";
+import { getErrorMessage } from "../../utils/getError";
+import { MoonLoader } from "react-spinners";
 
 type RequestTokenResponse = {
   request_token: string;
@@ -19,10 +21,18 @@ type AuthForm = {
   password: string;
 };
 
+type ErrorMessageProps = {
+  title: string;
+  description: string;
+};
+
 export function Login() {
-  const [responseRequestToken, setResponseRequestToken] = useState<RequestTokenResponse | null>(
-    null
-  );
+  const [errorMessage, setErrorMessage] = useState<ErrorMessageProps | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { handleLogin } = useContext(SessionContext);
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -35,48 +45,45 @@ export function Login() {
     },
   });
 
-  const { handleLogin } = useContext(SessionContext);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    (async () => {
-      const response: AxiosResponse<RequestTokenResponse> = await axiosInstance.get(
-        "/authentication/token/new"
-      );
-      setResponseRequestToken(response.data);
-    })();
-  }, []);
-
   async function onSubmit(data: AuthForm) {
     try {
-      const response = await axiosInstance.post("authentication/token/validate_with_login", {
-        username: data.username,
-        password: data.password,
-        request_token: responseRequestToken?.request_token,
-      });
+      setIsLoading(true);
+      const requestTokenResponse: AxiosResponse<RequestTokenResponse> = await axiosInstance.get(
+        "/authentication/token/new"
+      );
 
-      console.log(response.data);
-
-      const id: AxiosResponse<{ success: boolean; session_id: string }> = await axiosInstance.post(
-        "/authentication/session/new",
+      const authUserAndTokenResponse = await axiosInstance.post(
+        "authentication/token/validate_with_login",
         {
-          request_token: response.data.request_token,
+          username: data.username,
+          password: data.password,
+          request_token: requestTokenResponse.data.request_token,
         }
       );
 
-      handleLogin(id.data.session_id);
+      const sessionIdResponse: AxiosResponse<{ success: boolean; session_id: string }> =
+        await axiosInstance.post("/authentication/session/new", {
+          request_token: authUserAndTokenResponse.data.request_token,
+        });
+
+      handleLogin(sessionIdResponse.data.session_id);
       navigate("/");
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error.message);
-      }
+      setErrorMessage(getErrorMessage(error));
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
     <div className={styles.container__login}>
       <form onSubmit={handleSubmit(onSubmit)}>
+        {errorMessage && (
+          <Alert
+            title={errorMessage.title}
+            description={errorMessage?.description}
+          />
+        )}
         <h1>Bem vindo!</h1>
         <Input
           label="Nome de usuário"
@@ -94,9 +101,17 @@ export function Login() {
         />
         <Button
           variant="purple"
-          rightIcon={() => <CiLogin size={20} />}
+          rightIcon={() => !isLoading && <CiLogin size={20} />}
+          disabled={isLoading}
         >
-          Entrar
+          {!isLoading ? (
+            "Entrar"
+          ) : (
+            <MoonLoader
+              size={20}
+              color="#eef2ff"
+            />
+          )}
         </Button>
       </form>
     </div>

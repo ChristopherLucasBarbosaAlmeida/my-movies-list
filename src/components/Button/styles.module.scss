@@ -23,4 +23,9 @@
 .button__purple {
   background-color: $indigo600;
   color: $indigo50;
+
+  &:disabled {
+    background-color: $indigo400;
+    cursor: default;
+  }
 }
