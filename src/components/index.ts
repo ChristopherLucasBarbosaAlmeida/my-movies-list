@@ -8,3 +8,4 @@ export * from "./Chip";
 export * from "./Review";
 export * from "./Avatar";
 export * from "./Alert";
+export * from "./Dialog";

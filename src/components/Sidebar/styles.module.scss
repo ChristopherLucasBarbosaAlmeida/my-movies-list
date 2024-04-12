@@ -54,6 +54,10 @@
       font-size: 16px;
     }
 
+    span {
+      color: $neutral400;
+    }
+
     ul {
       display: flex;
       flex-direction: column;
@@ -78,6 +82,21 @@
 
     span {
       color: $neutral400;
+    }
+  }
+}
+
+.create__list__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .wrapper__buttons {
+    display: flex;
+    gap: 16px;
+
+    button {
+      flex: 1;
     }
   }
 }

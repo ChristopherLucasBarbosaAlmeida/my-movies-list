@@ -1,5 +1,5 @@
 import { formatDate } from "../../utils/formatDate";
-import Avatar from "../Avatar";
+import { Avatar } from "..";
 import styles from "./styles.module.scss";
 
 type ReviewProps = {

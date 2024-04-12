@@ -2,14 +2,8 @@
 
 .list {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
   color: $indigo50;
-
-  div {
-    width: 25px;
-    height: 25px;
-    background-color: $indigo600;
-    border-radius: 4px;
-  }
 }

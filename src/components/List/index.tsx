@@ -1,17 +1,23 @@
 import styles from "./styles.module.scss";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 type ListProps = {
-  imgUlr: string;
   name: string;
+  handleClick: () => void;
 };
 
 export function List(props: ListProps) {
-  const { name } = props;
+  const { name, handleClick } = props;
 
   return (
     <li className={styles.list}>
-      <div></div>
       <span>{name}</span>
+      <div>
+        <FaRegTrashAlt
+          size={20}
+          onClick={handleClick}
+        />
+      </div>
     </li>
   );
 }

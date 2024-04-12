@@ -7,7 +7,7 @@ type AvatarProps = {
 
 const baseUrl = "https://image.tmdb.org/t/p/original/";
 
-export default function Avatar(props: AvatarProps) {
+export function Avatar(props: AvatarProps) {
   const { avatar, username } = props;
 
   return (
