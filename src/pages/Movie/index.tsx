@@ -1,13 +1,34 @@
 import { Layout } from "../../layout";
 import styles from "./styles.module.scss";
-import { Chip, Review } from "../../components";
+import { Button, Chip, Review } from "../../components";
 import { useMovie } from "../../hooks/useMovie";
 import { useParams } from "react-router-dom";
+import { CiBookmark } from "react-icons/ci";
+import { axiosInstance } from "../../libs/axios";
+import { useContext } from "react";
+import { SessionContext } from "../../context/SessionContext";
+import { AxiosError } from "axios";
 
 export function MovieInfo() {
   const { movieId } = useParams();
 
   const { movie, reviewsResponse } = useMovie(movieId);
+
+  const { session } = useContext(SessionContext);
+
+  async function handleAddMovieToFavorites() {
+    try {
+      await axiosInstance.post(`/account/${session}/favorite`, {
+        media_type: "movie",
+        media_id: movie?.id,
+        favorite: true,
+      });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error(error.code);
+      }
+    }
+  }
 
   return (
     <Layout>
@@ -17,6 +38,13 @@ export function MovieInfo() {
             src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}
             alt={movie?.title}
           />
+          <Button
+            variant="primary"
+            rightIcon={() => <CiBookmark size={20} />}
+            onClick={handleAddMovieToFavorites}
+          >
+            Adicionar aos favoritos
+          </Button>
         </div>
         <section>
           <h1>{movie?.title}</h1>

@@ -141,7 +141,20 @@ export function Sidebar() {
           <Input placeholder="Search" />
           <ul>
             <li>
-              <NavLink to={"/"}>Home</NavLink>
+              <NavLink
+                className={({ isActive }) => (isActive ? styles.active : "")}
+                to={"/"}
+              >
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                className={({ isActive }) => (isActive ? styles.active : "")}
+                to={"/favorites"}
+              >
+                Fovoritos
+              </NavLink>
             </li>
           </ul>
         </nav>

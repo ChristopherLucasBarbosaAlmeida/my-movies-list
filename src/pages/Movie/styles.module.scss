@@ -8,6 +8,9 @@
 
   > div {
     width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   > section {

@@ -37,6 +37,12 @@
       a {
         width: 100%;
         color: $indigo50;
+        padding: 8px;
+        border-radius: 8px;
+
+        &.active {
+          background-color: $neutral900;
+        }
       }
     }
   }

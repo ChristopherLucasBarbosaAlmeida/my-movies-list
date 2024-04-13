@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Home, Login, MovieInfo } from "../pages";
+import { Favorites, Home, Login, MovieInfo } from "../pages";
 import { PrivateRoute } from "./PrivateRoute";
 
 export const router = createBrowserRouter([
@@ -21,6 +21,14 @@ export const router = createBrowserRouter([
     loader: ({ params }) => {
       return params;
     },
+  },
+  {
+    path: "/favorites",
+    element: (
+      <PrivateRoute>
+        <Favorites />,
+      </PrivateRoute>
+    ),
   },
   {
     path: "/login",
