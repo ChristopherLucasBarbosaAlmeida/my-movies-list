@@ -1,7 +1,7 @@
 import styles from "./styles.module.scss";
 
 type BannerProps = {
-  title: string;
+  title?: string;
   posterPath: string;
 };
 

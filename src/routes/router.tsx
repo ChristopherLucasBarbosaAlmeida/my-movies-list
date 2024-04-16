@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Favorites, Home, Login, MovieInfo } from "../pages";
+import { Favorites, Home, Login, MediaDetails } from "../pages";
 import { PrivateRoute } from "./PrivateRoute";
 
 export const router = createBrowserRouter([
@@ -12,10 +12,10 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/movie/:movieId",
+    path: "/media-details/:mediaType/:mediaId",
     element: (
       <PrivateRoute>
-        <MovieInfo />,
+        <MediaDetails />,
       </PrivateRoute>
     ),
     loader: ({ params }) => {
