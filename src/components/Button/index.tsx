@@ -13,9 +13,13 @@ const variants = {
   purple: styles.button__purple,
 };
 
-export function Button(props: ButtonProps) {
-  const { children, variant, leftIcon: LeftIcon, rightIcon: RightIcon, ...rest } = props;
-
+export function Button({
+  children,
+  variant,
+  leftIcon: LeftIcon,
+  rightIcon: RightIcon,
+  ...rest
+}: ButtonProps) {
   return (
     <button
       className={`${styles.button} ${variants[variant]}`}

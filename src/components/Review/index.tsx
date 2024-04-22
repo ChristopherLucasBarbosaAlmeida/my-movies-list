@@ -13,15 +13,13 @@ type ReviewProps = {
   created_at: string;
 };
 
-export function Review(props: ReviewProps) {
-  const { author_details, content, created_at } = props;
-
+export function Review({ author_details, content, created_at }: ReviewProps) {
   return (
     <li className={styles.review}>
       <div>
         <Avatar
           username={author_details.username}
-          avatar={author_details.avatar_path}
+          avatarPath={author_details.avatar_path}
         />
         <div>
           <strong>{author_details.username}</strong>

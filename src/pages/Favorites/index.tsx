@@ -1,23 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import { Layout } from "../../layout";
 import styles from "./styles.module.scss";
-import { axiosInstance } from "../../libs/axios";
-import { SessionContext } from "../../context/SessionContext";
-import { AxiosResponse } from "axios";
-import { MoviesResponse } from "../../types/MovieResponse";
+import { SessionIdContext } from "../../context/SessionIdContext";
 import { Banner } from "../../components";
+import { PagedMovie, PaginatedData } from "../../types/PaginatedData";
+import { movieService } from "../../services/MovieService";
 
 export function Favorites() {
-  const [favoriteMovies, setFavoriteMovies] = useState<MoviesResponse>();
+  const [paginatedFavorites, setPaginatedFavorites] = useState<PaginatedData<PagedMovie>>();
 
-  const { session } = useContext(SessionContext);
+  const { sessionId } = useContext(SessionIdContext);
 
   useEffect(() => {
     (async () => {
-      const response: AxiosResponse<MoviesResponse> = await axiosInstance.get(
-        `/account/${session}/favorite/movies`
-      );
-      setFavoriteMovies(response.data);
+      const paginatedFavoritesData = await movieService.getFavorites(sessionId);
+      setPaginatedFavorites(paginatedFavoritesData);
     })();
   }, []);
 
@@ -28,7 +25,7 @@ export function Favorites() {
           <h1>Seus favoritos</h1>
         </header>
         <ul>
-          {favoriteMovies?.results.map((result) => (
+          {paginatedFavorites?.results.map((result) => (
             <Banner
               key={result.id}
               posterPath={result.poster_path}

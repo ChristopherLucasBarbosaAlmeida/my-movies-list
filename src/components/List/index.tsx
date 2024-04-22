@@ -6,9 +6,7 @@ type ListProps = {
   handleClick: () => void;
 };
 
-export function List(props: ListProps) {
-  const { name, handleClick } = props;
-
+export function List({ name, handleClick }: ListProps) {
   return (
     <li className={styles.list}>
       <span>{name}</span>

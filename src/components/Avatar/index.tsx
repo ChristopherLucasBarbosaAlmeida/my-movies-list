@@ -1,22 +1,20 @@
 import styles from "./styles.module.scss";
 
 type AvatarProps = {
-  avatar?: string;
-  username: string;
+  avatarPath?: string;
+  username?: string;
 };
 
-const baseUrl = "https://image.tmdb.org/t/p/original/";
-
-export function Avatar(props: AvatarProps) {
-  const { avatar, username } = props;
+export function Avatar({ avatarPath, username }: AvatarProps) {
+  const firstLetterName = username?.charAt(0).toUpperCase();
 
   return (
     <div className={styles.avatar}>
-      {!avatar ? (
-        <span>{username?.charAt(0).toUpperCase()}</span>
+      {!avatarPath ? (
+        <span>{firstLetterName}</span>
       ) : (
         <img
-          src={`${baseUrl}${avatar}`}
+          src={`${import.meta.env.VITE_BASE_URL_IMAGE}${avatarPath}`}
           alt={username}
         />
       )}

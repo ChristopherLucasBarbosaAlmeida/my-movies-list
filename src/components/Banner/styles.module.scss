@@ -1,11 +1,12 @@
 @import "../../styles/colors";
 
 .banner {
-  width: 170px;
-  height: 250px;
+  width: 275px;
+  height: 400px;
 
   img {
     height: inherit;
     width: 100%;
+    border-radius: 5px;
   }
 }

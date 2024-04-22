@@ -5,15 +5,11 @@ type BannerProps = {
   posterPath: string;
 };
 
-const baseUrl = "https://image.tmdb.org/t/p/original/";
-
-export function Banner(props: BannerProps) {
-  const { title, posterPath } = props;
-
+export function Banner({ posterPath, title }: BannerProps) {
   return (
     <li className={styles.banner}>
       <img
-        src={`${baseUrl}${posterPath}`}
+        src={`${import.meta.env.VITE_BASE_URL_IMAGE}${posterPath}`}
         alt={title}
       />
     </li>

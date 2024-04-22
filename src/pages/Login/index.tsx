@@ -1,20 +1,13 @@
 import { useContext, useState } from "react";
 import { Button, Input, Alert } from "../../components";
 import styles from "./styles.module.scss";
-import { axiosInstance } from "../../libs/axios";
-import { AxiosResponse } from "axios";
-import { SessionContext } from "../../context/SessionContext";
+import { SessionIdContext } from "../../context/SessionIdContext";
 import { useNavigate } from "react-router-dom";
 import { CiLogin } from "react-icons/ci";
 import { useForm } from "react-hook-form";
 import { getErrorMessage } from "../../utils/getError";
 import { MoonLoader } from "react-spinners";
-
-type RequestTokenResponse = {
-  request_token: string;
-  expires_at: string;
-  success: boolean;
-};
+import { authService } from "../../services/AuthService";
 
 type AuthForm = {
   username: string;
@@ -27,10 +20,10 @@ type ErrorMessageProps = {
 };
 
 export function Login() {
-  const [errorMessage, setErrorMessage] = useState<ErrorMessageProps | null>(null);
+  const [errorMessage, setErrorMessage] = useState<ErrorMessageProps>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { handleLogin } = useContext(SessionContext);
+  const { storeSessionId } = useContext(SessionIdContext);
 
   const navigate = useNavigate();
 
@@ -48,25 +41,21 @@ export function Login() {
   async function onSubmit(data: AuthForm) {
     try {
       setIsLoading(true);
-      const requestTokenResponse: AxiosResponse<RequestTokenResponse> = await axiosInstance.get(
-        "/authentication/token/new"
+      const requestTokenResponse = await authService.generateRequestToken();
+
+      const payload = {
+        username: data.username,
+        password: data.password,
+        unauthorizedRequestToken: requestTokenResponse.request_token,
+      };
+
+      const authorizationRequestToken = await authService.authorizeRequestToken(payload);
+
+      const createdSession = await authService.createSession(
+        authorizationRequestToken.request_token
       );
 
-      const authUserAndTokenResponse = await axiosInstance.post(
-        "authentication/token/validate_with_login",
-        {
-          username: data.username,
-          password: data.password,
-          request_token: requestTokenResponse.data.request_token,
-        }
-      );
-
-      const sessionIdResponse: AxiosResponse<{ success: boolean; session_id: string }> =
-        await axiosInstance.post("/authentication/session/new", {
-          request_token: authUserAndTokenResponse.data.request_token,
-        });
-
-      handleLogin(sessionIdResponse.data.session_id);
+      storeSessionId(createdSession.session_id);
       navigate("/");
     } catch (error) {
       setErrorMessage(getErrorMessage(error));

@@ -1,0 +1,50 @@
+@import "../../styles/colors";
+
+.container__tv__program__details {
+  display: flex;
+  flex: 1;
+  gap: 24px;
+  padding: 16px;
+  overflow: auto;
+
+  > div {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  > section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 16px;
+
+    h1,
+    h2,
+    > p {
+      color: $indigo50;
+    }
+
+    div {
+      display: flex;
+      gap: 8px;
+    }
+
+    section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      > strong {
+        color: $neutral400;
+      }
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+}

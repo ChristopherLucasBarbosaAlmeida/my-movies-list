@@ -5,9 +5,7 @@ type LayoutProps = {
   children: ReactNode;
 };
 
-export function Layout(props: LayoutProps) {
-  const { children } = props;
-
+export function Layout({ children }: LayoutProps) {
   return (
     <main>
       <Sidebar />

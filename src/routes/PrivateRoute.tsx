@@ -1,22 +1,20 @@
 import { ReactNode, useContext, useEffect } from "react";
-import { SessionContext } from "../context/SessionContext";
+import { SessionIdContext } from "../context/SessionIdContext";
 import { useNavigate } from "react-router-dom";
 
 type PrivateRouteProps = {
   children: ReactNode;
 };
 
-export function PrivateRoute(props: PrivateRouteProps) {
-  const { children } = props;
-
-  const { session } = useContext(SessionContext);
+export function PrivateRoute({ children }: PrivateRouteProps) {
+  const { sessionId } = useContext(SessionIdContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!session) {
+    if (!sessionId) {
       navigate("/login");
     }
-  }, [session, navigate]);
+  }, [sessionId, navigate]);
 
   return children;
 }

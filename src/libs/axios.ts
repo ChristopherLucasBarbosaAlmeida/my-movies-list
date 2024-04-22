@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://api.themoviedb.org/3/",
+  baseURL: import.meta.env.VITE_BASE_URL_API,
   params: {
     language: "pt-br",
   },

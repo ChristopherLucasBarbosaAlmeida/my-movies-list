@@ -3,93 +3,86 @@ import styles from "./styles.module.scss";
 import { Layout } from "../../layout";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { axiosInstance } from "../../libs/axios";
-import { MoviesResponse } from "../../types/MovieResponse";
-import { GenreResponse } from "../../types/Genre";
-import { AxiosResponse } from "axios";
+import { Genre } from "../../types/Genre";
+import { PagedMovie, PagedTvProgram, PaginatedData } from "../../types/PaginatedData";
+import { movieService } from "../../services/MovieService";
+import { tvProgramService } from "../../services/TvProgramService";
 
-const order = [
+const sortingFilters = [
   {
     label: "Popularide",
     value: "popularity.asc",
   },
   {
     label: "Mais votados",
-    value: "vote_avarage.asc",
+    value: "vote_average.asc",
   },
   {
     label: "Menos votados",
-    value: "vote_avarage.desc",
+    value: "vote_average.desc",
   },
 ];
 
-const mediaTypes = {
-  tv: "tv",
-  movie: "movie",
-};
-
 export function Home() {
-  const [genre, setGenre] = useState("");
-  const [response, setResponse] = useState<MoviesResponse>();
-  const [popularity, setPopularity] = useState("vote_avarage.asc");
-  const [responseDataSeries, setResponseDataSeries] = useState<MoviesResponse>();
-  const [genresDataResponse, setGenresDataResponse] = useState<GenreResponse>();
+  const [paginatedMovies, setPaginatedMovies] = useState<PaginatedData<PagedMovie>>();
+  const [paginatedTvPrograms, setPaginatedTvPrograms] = useState<PaginatedData<PagedTvProgram>>();
 
-  const options =  genresDataResponse?.genres.map((genre) => ({
+  const [genreFilter, setGenreFilter] = useState("");
+  const [sortBy, setSortBy] = useState("vote_avarage.desc");
+
+  const [genres, setGenres] = useState<Genre>();
+  const genderSelectionOptions = genres?.genres.map((genre) => ({
     label: genre.name,
     value: genre.id,
   }));
 
   useEffect(() => {
     (async () => {
-      const result = await axiosInstance.get("/tv/popular");
-      setResponseDataSeries(result.data);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const response: AxiosResponse<GenreResponse> = await axiosInstance.get("genre/movie/list");
-      setGenresDataResponse(response.data);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const response = await axiosInstance.get("discover/movie", {
-        params: {
-          with_genres: genre,
-          sort_by: popularity,
-        },
+      const paginatedMoviesData = await movieService.getMedias({
+        sortBy,
+        withGenres: genreFilter,
       });
-      setResponse(response.data);
+
+      setPaginatedMovies(paginatedMoviesData);
     })();
-  }, [genre, popularity]);
+  }, [genreFilter, sortBy]);
+
+  useEffect(() => {
+    (async () => {
+      const paginatedTvProgramsData = await tvProgramService.getMedias();
+      setPaginatedTvPrograms(paginatedTvProgramsData);
+
+      const genresData = await movieService.getGenres();
+      setGenres(genresData);
+    })();
+  }, []);
 
   return (
     <Layout>
       <div className={styles.container__home}>
         <header>
-          <h1>Your recents movies</h1>
+          <h1>Filmes</h1>
           <div>
             <Select
-              options={options}
+              options={genderSelectionOptions}
               isMulti
               isSearchable={false}
               closeMenuOnSelect={false}
-              onChange={(options) => setGenre(options.map((option) => option.value).join(","))}
+              onChange={(genderSelectionOptions) =>
+                setGenreFilter(genderSelectionOptions.map((option) => option.value).join(","))
+              }
             />
             <Select
-              options={order}
+              options={sortingFilters}
               closeMenuOnSelect={false}
-              onChange={(option) => setPopularity(option!.value)}
+              onChange={(sortingOption) => setSortBy(sortingOption!.value)}
             />
           </div>
         </header>
         <ul>
-          {response?.results.map((result) => (
+          {paginatedMovies?.results?.map((result) => (
             <Link
-              to={`media-details/${mediaTypes.movie}/${result.id}`}
+              to={`/movie/${result.id}`}
               key={result.id}
             >
               <Banner
@@ -101,14 +94,14 @@ export function Home() {
         </ul>
         <h1>Series e programas de TV</h1>
         <ul>
-          {responseDataSeries?.results.map((result) => (
+          {paginatedTvPrograms?.results.map((result) => (
             <Link
-              to={`media-details/${mediaTypes.tv}/${result.id}`}
+              to={`/tv/${result.id}`}
               key={result.id}
             >
               <Banner
                 posterPath={result.poster_path}
-                title={result.title}
+                title={result.name}
               />
             </Link>
           ))}

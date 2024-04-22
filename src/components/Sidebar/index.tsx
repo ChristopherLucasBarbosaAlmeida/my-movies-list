@@ -3,67 +3,39 @@ import { Button, Dialog, Input, List, Avatar } from "..";
 import styles from "./styles.module.scss";
 import { CiLogout } from "react-icons/ci";
 import { useContext, useEffect, useRef, useState } from "react";
-import { SessionContext } from "../../context/SessionContext";
-import { axiosInstance } from "../../libs/axios";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import { GoPlus } from "react-icons/go";
 import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-type UserProps = {
-  avatar: {
-    gravatar: {
-      hash: string;
-    };
-    tmdb: {
-      avatar_path?: string;
-    };
-  };
-  id: number;
-  iso_639_1: string;
-  iso_3166_1: string;
-  name: string;
-  include_adult: boolean;
-  username: string;
-};
+import { authService } from "../../services/AuthService";
+import { SessionIdContext } from "../../context/SessionIdContext";
+import { PagedList, PaginatedData } from "../../types/PaginatedData";
+import { notify } from "../../libs/toastify";
+import { listService } from "../../services/ListService";
+import { User } from "../../types/User";
 
 type CreateListFormProps = {
   name: string;
   description: string;
 };
 
-export type ResponseRequestListProps = {
-  pages: number;
-  results: {
-    description: string;
-    favorite_count: number;
-    id: number;
-    item_count: number;
-    iso_639_1: string;
-    list_type: string;
-    name: string;
-    poster_path?: string;
-  }[];
-  total_pages: number;
-  total_results: number;
-};
-
-function notify() {
-  toast.success("Lista criada com sucesso!", {
-    position: "top-center",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    theme: "light",
-  });
-}
+const links = [
+  {
+    name: "Home",
+    path: "/",
+  },
+  {
+    name: "Favoritos",
+    path: "/favorites",
+  },
+];
 
 export function Sidebar() {
-  const [user, setUser] = useState<UserProps>({} as UserProps);
-  const [lists, setLists] = useState<ResponseRequestListProps>({} as ResponseRequestListProps);
+  const [user, setUser] = useState<User>();
+  const [paginatedList, setPaginatedList] = useState<PaginatedData<PagedList>>();
 
-  const { session, handleLogout } = useContext(SessionContext);
+  const { sessionId, deleteSessionId } = useContext(SessionIdContext);
 
   const navigate = useNavigate();
 
@@ -78,38 +50,34 @@ export function Sidebar() {
   } = useForm<CreateListFormProps>();
 
   async function onSubmit(data: CreateListFormProps) {
-    if (!session) return console.error("Invalid session!");
-
     try {
-      await axiosInstance.post(
-        "/list",
-        { name: data.name, description: data.description },
-        {
-          params: {
-            session_id: session,
-          },
-        }
-      );
+      const payload = {
+        name: data.name,
+        description: data.description,
+        sessionId,
+      };
 
-      const response: AxiosResponse<ResponseRequestListProps> = await axiosInstance.get(
-        `/account/${session}/lists`
-      );
+      await listService.createList(payload);
+
+      const paginatedListsData = await listService.getLists(sessionId);
 
       dialogRef.current?.close();
 
-      setLists(response.data);
+      setPaginatedList(paginatedListsData);
       notify();
       reset();
-    } catch (error) {}
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error.code);
+      }
+    }
   }
 
   async function handleDeleteList(listId: number) {
     try {
-      await axiosInstance.delete(`/list/${listId}`);
-      const response: AxiosResponse<ResponseRequestListProps> = await axiosInstance.get(
-        `/account/${session}/lists`
-      );
-      setLists(response.data);
+      await listService.deleteList(listId);
+      const paginatedListData = await listService.getLists(sessionId);
+      setPaginatedList(paginatedListData);
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.code);
@@ -119,19 +87,12 @@ export function Sidebar() {
 
   useEffect(() => {
     (async () => {
-      const response: AxiosResponse<UserProps> = await axiosInstance.get(`/account/${session}`);
-      setUser(response.data);
+      const userData = await authService.getUserDetails(sessionId);
+      setUser(userData);
+      const paginatedList = await listService.getLists(sessionId);
+      setPaginatedList(paginatedList);
     })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const response: AxiosResponse<ResponseRequestListProps> = await axiosInstance.get(
-        `/account/${session}/lists`
-      );
-      setLists(response.data);
-    })();
-  }, []);
+  }, [sessionId]);
 
   return (
     <>
@@ -140,31 +101,25 @@ export function Sidebar() {
         <nav>
           <Input placeholder="Search" />
           <ul>
-            <li>
-              <NavLink
-                className={({ isActive }) => (isActive ? styles.active : "")}
-                to={"/"}
-              >
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                className={({ isActive }) => (isActive ? styles.active : "")}
-                to={"/favorites"}
-              >
-                Fovoritos
-              </NavLink>
-            </li>
+            {links.map((link) => (
+              <li>
+                <NavLink
+                  className={({ isActive }) => (isActive ? styles.active : "")}
+                  to={link.path}
+                >
+                  {link.name}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </nav>
         <section>
           <h1>Minhas listas</h1>
           <ul>
-            {!lists?.total_results ? (
+            {!paginatedList?.total_results ? (
               <span>Você não tem listas criadas</span>
             ) : (
-              lists.results.map((result) => (
+              paginatedList.results.map((result) => (
                 <List
                   key={result.id}
                   name={result.name}
@@ -183,16 +138,16 @@ export function Sidebar() {
         </section>
         <div>
           <Avatar
-            avatar={user?.avatar?.tmdb?.avatar_path}
-            username={user.username}
+            avatarPath={user?.avatar?.tmdb?.avatar_path}
+            username={user?.username}
           />
-          <span>{user.username}</span>
+          <span>{user?.username}</span>
         </div>
         <Button
           variant="seconday"
           rightIcon={() => <CiLogout size={20} />}
           onClick={() => {
-            handleLogout();
+            deleteSessionId();
             navigate("/login");
           }}
         >

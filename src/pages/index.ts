@@ -1,4 +1,5 @@
 export * from "./Home";
-export * from "./MediaDetails";
+export * from "./MovieDetails";
+export * from "./TvProgramDetails";
 export * from "./Login";
 export * from "./Favorites";

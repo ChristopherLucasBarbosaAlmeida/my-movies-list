@@ -3,12 +3,12 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import "./styles/base.scss";
 import { router } from "./routes/router";
-import { SessionContextProvider } from "./context/SessionContext";
+import { SessionIdContextProvider } from "./context/SessionIdContext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <SessionContextProvider>
+    <SessionIdContextProvider>
       <RouterProvider router={router} />
-    </SessionContextProvider>
+    </SessionIdContextProvider>
   </React.StrictMode>
 );

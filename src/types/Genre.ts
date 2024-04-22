@@ -1,1 +1,1 @@
-export type GenreResponse = { genres: { id: number; name: string }[] };
+export type Genre = { genres: { id: number; name: string }[] };
