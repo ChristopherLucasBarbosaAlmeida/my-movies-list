@@ -14,6 +14,7 @@ import { PagedList, PaginatedData } from "../../types/PaginatedData";
 import { notify } from "../../libs/toastify";
 import { listService } from "../../services/ListService";
 import { User } from "../../types/User";
+import { MoonLoader } from "react-spinners";
 
 type CreateListFormProps = {
   name: string;
@@ -34,6 +35,7 @@ const links = [
 export function Sidebar() {
   const [user, setUser] = useState<User>();
   const [paginatedList, setPaginatedList] = useState<PaginatedData<PagedList>>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { sessionId, deleteSessionId } = useContext(SessionIdContext);
 
@@ -94,6 +96,14 @@ export function Sidebar() {
     })();
   }, [sessionId]);
 
+  async function handleLogout() {
+    setIsLoading(true);
+    await authService.deleteSession(sessionId);
+    deleteSessionId();
+    navigate("/login");
+    setIsLoading(false);
+  }
+
   return (
     <>
       <aside className={styles.sidebar}>
@@ -145,13 +155,19 @@ export function Sidebar() {
         </div>
         <Button
           variant="seconday"
-          rightIcon={() => <CiLogout size={20} />}
-          onClick={() => {
-            deleteSessionId();
-            navigate("/login");
-          }}
+          rightIcon={() =>
+            !isLoading ? (
+              <CiLogout size={20} />
+            ) : (
+              <MoonLoader
+                size={20}
+                color="#eef2ff"
+              />
+            )
+          }
+          onClick={handleLogout}
         >
-          Sair
+          {!isLoading && "Sair"}
         </Button>
       </aside>
       <Dialog

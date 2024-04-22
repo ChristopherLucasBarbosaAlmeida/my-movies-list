@@ -90,17 +90,19 @@ export function Login() {
         />
         <Button
           variant="purple"
-          rightIcon={() => !isLoading && <CiLogin size={20} />}
+          rightIcon={() =>
+            !isLoading ? (
+              <CiLogin size={20} />
+            ) : (
+              <MoonLoader
+                size={20}
+                color="#eef2ff"
+              />
+            )
+          }
           disabled={isLoading}
         >
-          {!isLoading ? (
-            "Entrar"
-          ) : (
-            <MoonLoader
-              size={20}
-              color="#eef2ff"
-            />
-          )}
+          {!isLoading && "Entrar"}
         </Button>
       </form>
     </div>
